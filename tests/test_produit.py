@@ -12,3 +12,8 @@ def test_creation_produit():
 def test_valeur_stock():
     p = Produit("Clavier", 50, 10)
     assert p.valeur_stock() == 500
+
+
+def test_prix_negatif_leve_erreur():
+    with pytest.raises(ValueError):
+        Produit("Clavier", -10, 10)
