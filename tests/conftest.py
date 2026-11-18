@@ -9,8 +9,10 @@ def produit_clavier():
 
 
 @pytest.fixture
-def inventaire_avec_produits(produit_clavier):
+def inventaire_avec_produits():
     inv = Inventaire()
-    inv.ajouter(produit_clavier)
+    inv.ajouter(Produit("Clavier", 50, 10))
     inv.ajouter(Produit("Souris", 20, 3))
+    inv.ajouter(Produit("Tapis", 0, 15))
+    inv.ajouter(Produit("Lampe", 100, 25))
     return inv
