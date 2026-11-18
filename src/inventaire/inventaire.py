@@ -1,4 +1,5 @@
 from inventaire.produit import Produit
+from inventaire.service_notification import ServiceNotification
 
 
 class ProduitInexistant(Exception):
@@ -6,7 +7,6 @@ class ProduitInexistant(Exception):
         self.nom = nom
         message = f"Le produit '{nom}' est introuvable dans l'inventaire."
         super().__init__(message)
-
 
 class StockInsuffisant(Exception):
     def __init__(self, nom: str, quantite_demande: int, quantite_disponible: int):
@@ -19,10 +19,10 @@ class StockInsuffisant(Exception):
         )
         super().__init__(message)
 
-
 class Inventaire:
-    def __init__(self):
-        self._produits: dict[str, Produit] = {}
+    def __init__ ( self , notifier : ServiceNotification | None = None ):
+        self . _produits : dict [str , Produit ] = {}
+        self . _notifier = notifier or ServiceNotification ()
 
     def ajouter(self, produit: Produit) -> None:
         self._produits[produit.nom] = produit
@@ -40,3 +40,7 @@ class Inventaire:
             raise StockInsuffisant(nom, quantite, produit.quantite)
 
         produit.quantite -= quantite
+
+        # Vérifie si le stock est bas après le retrait
+        if produit.quantite < 5:  # Seuil de stock bas
+            self._notifier.envoyer_alerte_stock_bas(produit)
