@@ -28,7 +28,10 @@ def test_service_notification_reel():
 # --- 7.3 : xfail -- bug connu, pas encore corrige ----------------------------
 
 
-@pytest.mark.xfail(reason="bug connu : retirer() accepte une quantite negative")
+@pytest.mark.xfail(
+    reason="bug connu : retirer() accepte une quantite negative",
+    strict=True,
+)
 def test_retirer_quantite_negative_leve_erreur(inventaire_avec_produits):
     with pytest.raises(ValueError):
         inventaire_avec_produits.retirer("Clavier", -5)
