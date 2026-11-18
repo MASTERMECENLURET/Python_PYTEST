@@ -25,13 +25,8 @@ def test_service_notification_reel():
     assert service.envoyer_alerte_stock_bas(Produit("Clavier", 50, 3)) is True
 
 
-# --- 7.3 : xfail -- bug connu, pas encore corrige ----------------------------
+# --- 7.3 : bug corrige -- le marqueur xfail est retire ------------------------
 
-
-@pytest.mark.xfail(
-    reason="bug connu : retirer() accepte une quantite negative",
-    strict=True,
-)
 def test_retirer_quantite_negative_leve_erreur(inventaire_avec_produits):
     with pytest.raises(ValueError):
         inventaire_avec_produits.retirer("Clavier", -5)
