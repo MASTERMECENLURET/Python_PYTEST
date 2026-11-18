@@ -58,3 +58,15 @@ def test_pas_d_alerte_si_stock_suffisant(mocker):
     inv.retirer("Clavier", 2)  # stock passe a 18, au-dessus du seuil
 
     notifier.envoyer_alerte_stock_bas.assert_not_called()
+
+
+def test_alerte_envoyee_avec_le_bon_produit(mocker):
+    """Bonus : verifie que le mock recoit bien l'argument attendu."""
+    notifier = mocker.Mock()
+    inv = Inventaire(notifier=notifier)
+    produit = Produit("Clavier", 50, 6)
+    inv.ajouter(produit)
+
+    inv.retirer("Clavier", 2)
+
+    notifier.envoyer_alerte_stock_bas.assert_called_once_with(produit)
