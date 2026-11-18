@@ -2,6 +2,7 @@ import pytest
 import os
 from inventaire.service_notification import ServiceNotification
 from inventaire.produit import Produit
+from inventaire.remise import RemisePourcentage
 
 
 # --- 7.1 : skip -- fonctionnalite pas encore implementee ---------------------
@@ -30,3 +31,17 @@ def test_service_notification_reel():
 def test_retirer_quantite_negative_leve_erreur(inventaire_avec_produits):
     with pytest.raises(ValueError):
         inventaire_avec_produits.retirer("Clavier", -5)
+
+
+# --- B2 : xfail sur un seul cas d'un test parametre --------------------------
+
+@pytest.mark.parametrize("remise,attendu", [
+    (RemisePourcentage(10), 90),
+    pytest.param(
+        RemisePourcentage(150), 0,
+        marks=pytest.mark.xfail(
+            reason="bug connu : un pourcentage > 100 rend le prix negatif"),
+    ),
+], ids=["10pct", "150pct"])
+def test_remise_pourcentage_jamais_negative(remise, attendu):
+    assert remise.appliquer(100) == attendu
