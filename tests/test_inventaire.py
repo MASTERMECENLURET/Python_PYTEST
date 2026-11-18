@@ -1,5 +1,5 @@
 import pytest
-from inventaire.inventaire import Inventaire, StockInsuffisant
+from inventaire.inventaire import Inventaire, StockInsuffisant, ProduitInexistant
 from cas_produits import CAS_PRODUITS
 
 
@@ -33,3 +33,8 @@ def test_retirer_quantite_valide(inventaire_avec_produits, quantite_retiree):
 def test_retirer_stock_insuffisant(inventaire_avec_produits, nom, quantite):
     with pytest.raises(StockInsuffisant):
         inventaire_avec_produits.retirer(nom, quantite)
+
+
+def test_retirer_produit_inexistant(inventaire_avec_produits):
+    with pytest.raises(ProduitInexistant):
+        inventaire_avec_produits.retirer("Webcam", 1)
