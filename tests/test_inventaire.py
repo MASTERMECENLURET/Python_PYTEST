@@ -1,6 +1,7 @@
 import pytest
 from inventaire.inventaire import Inventaire, StockInsuffisant, ProduitInexistant
 from cas_produits import CAS_PRODUITS
+from inventaire.produit import Produit
 
 
 @pytest.mark.parametrize("produit", CAS_PRODUITS)
@@ -38,3 +39,13 @@ def test_retirer_stock_insuffisant(inventaire_avec_produits, nom, quantite):
 def test_retirer_produit_inexistant(inventaire_avec_produits):
     with pytest.raises(ProduitInexistant):
         inventaire_avec_produits.retirer("Webcam", 1)
+
+
+def test_alerte_declenchee_si_stock_bas(mocker):
+    notifier = mocker.Mock()
+    inv = Inventaire(notifier=notifier)
+    inv.ajouter(Produit("Clavier", 50, 6))
+
+    inv.retirer("Clavier", 2)  # stock passe a 4, sous le seuil de 5
+
+    notifier.envoyer_alerte_stock_bas.assert_called_once()
